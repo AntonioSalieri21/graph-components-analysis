@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\BFS_DFS\BFS_DFS\Graph.cpp" />
-    <ClCompile Include="..\..\..\BFS_DFS\BFS_DFS\Source.cpp" />
+    <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\BFS_DFS\BFS_DFS\Graph.h" />
+    <ClInclude Include="Graph.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

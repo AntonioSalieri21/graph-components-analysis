@@ -1,6 +1,8 @@
 #include "Graph.h"
 #include <vector>
 #include <stack>
+#include <iostream>
+#include <fstream>
 using namespace std;
 
 void Graph::insertVertex(int id) {this->vertices.push_back(new Vertex(id));}
@@ -33,6 +35,8 @@ Graph::Vertex* Graph::findVertex(int id)
 	return nullptr;
 }
 
+
+
 bool Graph::findIdDFS(int id)
 {
 	Vertex* current = vertices.front();
@@ -62,46 +66,6 @@ bool Graph::findIdDFS(int id)
 	}
 }
 
-void Graph::createDirectedEdge(int from, int to)
-{
-	Vertex* fromVertex = findVertex(from);
-	Vertex* toVertex = findVertex(to);
-
-	if (fromVertex != nullptr && toVertex != nullptr)
-		fromVertex->neighbours.push_back(toVertex);
-}
-
-void Graph::topologicalSort(vector<int>& sortedVertices)
-{
-	if (!visit(vertices.front(), sortedVertices))
-	{
-		sortedVertices.clear();
-		return;
-	}
-}
-
-bool Graph::visit(Vertex* vertex, vector<int>& sortedVertices)
-{
-	if (vertex->color = 2)
-		return true;
-
-	if (vertex->color = 1)
-	{
-		vertex->color = 2;
-		return false;
-	}
-		
-	vertex->color = 1;
-	for (auto neighbour : vertex->neighbours)
-		if (!visit(neighbour, sortedVertices)) return false;
-
-	vertex->color = 2;
-	sortedVertices.emplace(sortedVertices.begin(), vertex->id);
-
-	return true;
-}
-
-/*
 void getDoubleInt(string text, int& a, int& b)
 {
 
@@ -113,7 +77,7 @@ void getDoubleInt(string text, int& a, int& b)
 		x++;
 	}
 	a = stoi(*tmp);
-	
+
 	x++;
 
 	tmp = new string[text.length()];
@@ -128,24 +92,132 @@ void getDoubleInt(string text, int& a, int& b)
 
 }
 
+Graph::Vertex* Graph::searchCreateVertex(int id)
+{
+
+	return nullptr;
+}
 void Graph::readGraphFromFile(string path)
 {
 	string vertex_pair;
 	ifstream file(path);
 
-	while (getline(file, vertex_pair)) 
+	int searchCount = 0;
+	int addCount = 0;
+	while (getline(file, vertex_pair))
 	{
 		int a = 0;
 		int b = 0;
 		getDoubleInt(vertex_pair, a, b);
-		Node* first = new Node(a);
-		Node* second = new Node(b);
 
-		this->addPair(first, second);
+		
+
+
+		Vertex* v_a = findVertex(a);
+		Vertex* v_b = findVertex(b);
+
+		if (v_a == nullptr)
+		{
+			insertVertex(a);
+			v_a = findVertex(a);
+		}
+
+		if (v_b == nullptr)
+		{
+			insertVertex(b);
+			v_b = findVertex(b);
+		}
+
+		//cout << v_a->id << "   " << v_b->id << endl;
+		//Vertex* v_a = searchCreateVertex(a);
+		//Vertex* v_b = searchCreateVertex(b);
+
+		v_b->neighbours.push_back(v_a);
+		v_a->neighbours.push_back(v_b);
+
 	}
+
+	cout << "Number of adding vertex: " << addCount << endl;
+	cout << "Number of searching vertex: " << searchCount << endl;
 
 	file.close();
 
 }
 
-*/
+Graph::Component* Graph::getLargestComponent()
+{
+
+	for (auto vertex : vertices)
+	{
+		if (vertex->color == 0)
+			components.push_back(defineComponent(vertex));
+	}
+
+	Component* res = &components.at(0);
+
+	for(auto component : components)
+		if (component.members.size() > res->members.size()) { res = &component; }
+
+	return res;
+}
+
+Graph::Component Graph::defineComponent(Vertex* startVertex)
+{
+	Component comp;
+
+	Vertex* current = startVertex;
+	stack<Vertex*> stack;
+
+	stack.push(current);
+	current->color = 1;
+
+	while (!stack.empty())
+	{
+		current = stack.top();
+		comp.members.push_back(current);
+		stack.pop();
+
+		//cout << current->id << endl;
+
+		current->color = 2;
+
+		for (auto neighbour : current->neighbours)
+		{
+			if (neighbour->color == 0)
+			{
+				stack.push(neighbour);
+				neighbour->color = 1;
+			}
+		}
+	}
+
+
+	return comp;
+}
+
+void Graph::print()
+{
+	for (auto vertex : vertices)
+	{
+		cout << vertex->id;
+		for (auto neighbour : vertex->neighbours)
+			cout << "   " << neighbour->id;
+
+		cout << endl;
+	}
+
+}
+
+void Graph::Component::print()
+{
+	for(auto member : members)
+	{
+		cout << member->id;
+		for (auto neighbour : member->neighbours)
+			cout << "   " << neighbour->id;
+
+		cout << endl;
+	}
+}
+
+

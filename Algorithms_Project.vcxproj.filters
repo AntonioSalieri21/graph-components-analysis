@@ -15,15 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\BFS_DFS\BFS_DFS\Graph.cpp">
+    <ClCompile Include="Graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\BFS_DFS\BFS_DFS\Source.cpp">
+    <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\BFS_DFS\BFS_DFS\Graph.h">
+    <ClInclude Include="Graph.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
