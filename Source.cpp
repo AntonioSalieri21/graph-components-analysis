@@ -12,13 +12,12 @@ int main()
 
 	g.readGraphFromFile("text.txt");
 
+	g.print();
+
 	time_t readTime = time(NULL);
 	cout << "Read time: " << readTime - startTime << endl << endl;
-	//g.print();
 
 	Graph::Component* comp = g.getLargestComponent();
-
-
 
 	time_t endTime = time(NULL);
 	

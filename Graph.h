@@ -15,6 +15,9 @@ public:
 		vector<Vertex*> neighbours;
 		int color;
 
+		Vertex* BST_left;
+		Vertex* BST_right;
+
 		Vertex(int id){this->id = id;}
 
 	};
@@ -25,20 +28,30 @@ public:
 		void print();
 	};
 
+	class BST{
+	public:
+		Vertex* root = nullptr;
+
+		Vertex* InsertBST(int data);
+		Vertex* InsertInnerBST(Vertex* root, int data);
+
+		Vertex* searchBST(int data);
+		Vertex* searchInnerBST(Vertex* root, int data);
+	};
+public:
 	vector<Vertex*> vertices;
 	vector<Component> components;
+	BST searchTree;
+
 
 	void print();
 
 	void insertVertex(int id);
-	Vertex* insertVertexAdress(int id);
+	void insertVertex(Vertex* vertex);
 	void insertVertex(int id, vector<int> neighboursIds);
-	void QuickSort(int left, int right);
-	void swap(Vertex* src, Vertex* dst);
+
 
 	Vertex* findVertex(int id);
-	Vertex* searchCreateVertex(int id);
-	bool findIdDFS(int id);
 	void readGraphFromFile(string path);
 
 	Component* getLargestComponent();

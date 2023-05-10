@@ -6,6 +6,7 @@
 using namespace std;
 
 void Graph::insertVertex(int id) {this->vertices.push_back(new Vertex(id));}
+void Graph::insertVertex(Vertex* vertex) { this->vertices.push_back(vertex); }
 void Graph::insertVertex(int id, vector<int> neighboursIds)
 {
 	Vertex* newVertex = new Vertex(id);
@@ -35,37 +36,6 @@ Graph::Vertex* Graph::findVertex(int id)
 	return nullptr;
 }
 
-
-
-bool Graph::findIdDFS(int id)
-{
-	Vertex* current = vertices.front();
-	stack<Vertex*> stack;
-
-	stack.push(current);
-	current->color = 1;
-
-	while (!stack.empty())
-	{
-		current = stack.top();
-		stack.pop();
-
-		current->color = 2;
-
-		if (current->id == id)
-			return true;
-
-		for (auto neighbour : current->neighbours)
-		{
-			if (neighbour->color == 0)
-			{
-				stack.push(neighbour);
-				neighbour->color = 1;
-			}
-		}
-	}
-}
-
 void getDoubleInt(string text, int& a, int& b)
 {
 
@@ -92,11 +62,6 @@ void getDoubleInt(string text, int& a, int& b)
 
 }
 
-Graph::Vertex* Graph::searchCreateVertex(int id)
-{
-
-	return nullptr;
-}
 void Graph::readGraphFromFile(string path)
 {
 	string vertex_pair;
@@ -110,35 +75,32 @@ void Graph::readGraphFromFile(string path)
 		int b = 0;
 		getDoubleInt(vertex_pair, a, b);
 
-		
-
-
-		Vertex* v_a = findVertex(a);
-		Vertex* v_b = findVertex(b);
-
+		Vertex* v_a = searchTree.searchBST(a);
+		Vertex* v_b = searchTree.searchBST(b);
 		if (v_a == nullptr)
 		{
-			insertVertex(a);
-			v_a = findVertex(a);
+			//cout << "Nullptr A: " << a << endl;
+			v_a = searchTree.InsertBST(a);
+			vertices.push_back(v_a);
 		}
 
 		if (v_b == nullptr)
 		{
-			insertVertex(b);
-			v_b = findVertex(b);
+			//cout << "Nullptr B: " << b << endl;
+			v_b = searchTree.InsertBST(b);
+			vertices.push_back(v_b);
 		}
-
-		//cout << v_a->id << "   " << v_b->id << endl;
-		//Vertex* v_a = searchCreateVertex(a);
-		//Vertex* v_b = searchCreateVertex(b);
-
+		//Vertex* v_a = searchTree.InsertBST(a);
+		//Vertex* v_b = searchTree.InsertBST(b);
 		v_b->neighbours.push_back(v_a);
 		v_a->neighbours.push_back(v_b);
 
-	}
+		//cout << searchTree.searchBST(a) << endl;
 
-	cout << "Number of adding vertex: " << addCount << endl;
-	cout << "Number of searching vertex: " << searchCount << endl;
+
+		//cout << v_a->id << "   " << v_b->id << endl;
+
+	}
 
 	file.close();
 
@@ -191,7 +153,6 @@ Graph::Component Graph::defineComponent(Vertex* startVertex)
 		}
 	}
 
-
 	return comp;
 }
 
@@ -220,4 +181,45 @@ void Graph::Component::print()
 	}
 }
 
+Graph::Vertex* Graph::BST::InsertBST(int data)
+{
+	return InsertInnerBST(root, data);
+}
 
+Graph::Vertex* Graph::BST::InsertInnerBST(Vertex* root, int data)
+{
+	if (root == nullptr)
+	{
+		root = new Vertex(data);
+		return root;
+	}
+
+	if (root->id == data)
+		return root;
+
+	if (root->id > data)
+		return InsertInnerBST(root->BST_left, data);
+
+	if (root->id < data)
+		return InsertInnerBST(root->BST_right, data);
+}
+
+Graph::Vertex* Graph::BST::searchBST(int data)
+{
+	return searchInnerBST(root, data);
+}
+
+Graph::Vertex* Graph::BST::searchInnerBST(Vertex* root, int data)
+{
+	if (root == nullptr)
+		return nullptr;
+
+	if (root->id == data)
+		return root;
+
+	if (data < root->id)
+		return searchInnerBST(root->BST_left, data);
+
+	if (data > root->id)
+		return searchInnerBST(root->BST_right, data);
+}
