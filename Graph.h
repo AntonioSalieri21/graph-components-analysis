@@ -32,6 +32,9 @@ public:
 	public:
 		Vertex* root = nullptr;
 
+		void print();
+		void printInner(Vertex* root);
+
 		Vertex* InsertBST(int data);
 		Vertex* InsertInnerBST(Vertex* root, int data);
 

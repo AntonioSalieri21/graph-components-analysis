@@ -13,7 +13,7 @@ int main()
 	g.readGraphFromFile("text.txt");
 
 	g.print();
-
+	//g.searchTree.print();
 	time_t readTime = time(NULL);
 	cout << "Read time: " << readTime - startTime << endl << endl;
 

@@ -77,28 +77,26 @@ void Graph::readGraphFromFile(string path)
 
 		Vertex* v_a = searchTree.searchBST(a);
 		Vertex* v_b = searchTree.searchBST(b);
+
 		if (v_a == nullptr)
 		{
-			//cout << "Nullptr A: " << a << endl;
 			v_a = searchTree.InsertBST(a);
 			vertices.push_back(v_a);
 		}
-
 		if (v_b == nullptr)
 		{
-			//cout << "Nullptr B: " << b << endl;
 			v_b = searchTree.InsertBST(b);
 			vertices.push_back(v_b);
 		}
-		//Vertex* v_a = searchTree.InsertBST(a);
-		//Vertex* v_b = searchTree.InsertBST(b);
+
 		v_b->neighbours.push_back(v_a);
 		v_a->neighbours.push_back(v_b);
+
 
 		//cout << searchTree.searchBST(a) << endl;
 
 
-		//cout << v_a->id << "   " << v_b->id << endl;
+		cout << v_a->id << "   " << v_b->id << endl;
 
 	}
 
@@ -183,25 +181,25 @@ void Graph::Component::print()
 
 Graph::Vertex* Graph::BST::InsertBST(int data)
 {
-	return InsertInnerBST(root, data);
-}
-
-Graph::Vertex* Graph::BST::InsertInnerBST(Vertex* root, int data)
-{
 	if (root == nullptr)
 	{
 		root = new Vertex(data);
 		return root;
 	}
+	else
+		return InsertInnerBST(root, data);
+}
 
-	if (root->id == data)
-		return root;
+Graph::Vertex* Graph::BST::InsertInnerBST(Vertex* root, int data)
+{
+	if (root == nullptr)
+		return new Vertex(data);
+	if (data < root->id)
+		root->BST_left = InsertInnerBST(root->BST_left, data);
+	if (data > root->id)
+		root->BST_right = InsertInnerBST(root->BST_right, data);
 
-	if (root->id > data)
-		return InsertInnerBST(root->BST_left, data);
-
-	if (root->id < data)
-		return InsertInnerBST(root->BST_right, data);
+	return root;
 }
 
 Graph::Vertex* Graph::BST::searchBST(int data)
@@ -212,7 +210,9 @@ Graph::Vertex* Graph::BST::searchBST(int data)
 Graph::Vertex* Graph::BST::searchInnerBST(Vertex* root, int data)
 {
 	if (root == nullptr)
+	{
 		return nullptr;
+	}
 
 	if (root->id == data)
 		return root;
@@ -222,4 +222,21 @@ Graph::Vertex* Graph::BST::searchInnerBST(Vertex* root, int data)
 
 	if (data > root->id)
 		return searchInnerBST(root->BST_right, data);
+}
+
+void Graph::BST::print()
+{
+	printInner(root);
+}
+
+void Graph::BST::printInner(Vertex* root)
+{
+	if (root != nullptr)
+	{
+		cout << root->id << endl;
+		printInner(root->BST_left);
+		printInner(root->BST_right);
+	}
+	else return;
+
 }
