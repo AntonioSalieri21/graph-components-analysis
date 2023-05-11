@@ -5,35 +5,14 @@
 #include <fstream>
 using namespace std;
 
-void Graph::insertVertex(int id) {this->vertices.push_back(new Vertex(id));}
-void Graph::insertVertex(Vertex* vertex) { this->vertices.push_back(vertex); }
-void Graph::insertVertex(int id, vector<int> neighboursIds)
+void Graph::insertVertex(int id)
 {
-	Vertex* newVertex = new Vertex(id);
-
-	for (auto neighbourId : neighboursIds)
-	{
-		Vertex* neighbour = findVertex(neighbourId);
-
-		if (neighbour != nullptr)
-		{
-			/*neighbour->neighbours.push_back(newVertex);
-			if(neighbour->id != newVertex->id)*/
-			newVertex->neighbours.push_back(neighbour);
-		}
-	}
-	
-	this->vertices.push_back(newVertex);
+	this->vertices.push_back(new Vertex(id));
 }
+void Graph::insertVertex(Vertex* vertex) 
+{ 
 
-Graph::Vertex* Graph::findVertex(int id)
-{
-	for (auto vertex : this->vertices)
-	{
-		if (vertex->id == id)
-			return vertex;
-	}
-	return nullptr;
+	this->vertices.push_back(vertex);
 }
 
 void getDoubleInt(string text, int& a, int& b)
@@ -81,22 +60,17 @@ void Graph::readGraphFromFile(string path)
 		if (v_a == nullptr)
 		{
 			v_a = searchTree.InsertBST(a);
-			vertices.push_back(v_a);
+			insertVertex(v_a);
 		}
 		if (v_b == nullptr)
 		{
 			v_b = searchTree.InsertBST(b);
-			vertices.push_back(v_b);
+			insertVertex(v_b);
 		}
+			
 
 		v_b->neighbours.push_back(v_a);
 		v_a->neighbours.push_back(v_b);
-
-
-		//cout << searchTree.searchBST(a) << endl;
-
-
-		cout << v_a->id << "   " << v_b->id << endl;
 
 	}
 
@@ -186,42 +160,47 @@ Graph::Vertex* Graph::BST::InsertBST(int data)
 		root = new Vertex(data);
 		return root;
 	}
-	else
-		return InsertInnerBST(root, data);
+	return InsertInnerBST(&root, data);
 }
 
-Graph::Vertex* Graph::BST::InsertInnerBST(Vertex* root, int data)
+Graph::Vertex* Graph::BST::InsertInnerBST(Vertex** node, int data)
 {
-	if (root == nullptr)
-		return new Vertex(data);
-	if (data < root->id)
-		root->BST_left = InsertInnerBST(root->BST_left, data);
-	if (data > root->id)
-		root->BST_right = InsertInnerBST(root->BST_right, data);
-
-	return root;
+	if (*node == nullptr)
+	{
+		*node = new Vertex(data);
+		return *node;
+	}
+	if (data < (*node)->id)
+		return InsertInnerBST(&((*node)->BST_left), data);
+	else if (data > (*node)->id)
+		return InsertInnerBST(&((*node)->BST_right), data);
+	else
+		return *node; 
 }
+
+
+
 
 Graph::Vertex* Graph::BST::searchBST(int data)
 {
 	return searchInnerBST(root, data);
 }
 
-Graph::Vertex* Graph::BST::searchInnerBST(Vertex* root, int data)
+Graph::Vertex* Graph::BST::searchInnerBST(Vertex* node, int data)
 {
-	if (root == nullptr)
+	if (node == nullptr)
 	{
 		return nullptr;
 	}
 
-	if (root->id == data)
-		return root;
+	if (node->id == data)
+		return node;
 
-	if (data < root->id)
-		return searchInnerBST(root->BST_left, data);
+	if (data < node->id)
+		return searchInnerBST(node->BST_left, data);
 
-	if (data > root->id)
-		return searchInnerBST(root->BST_right, data);
+	if (data > node->id)
+		return searchInnerBST(node->BST_right, data);
 }
 
 void Graph::BST::print()
@@ -229,13 +208,13 @@ void Graph::BST::print()
 	printInner(root);
 }
 
-void Graph::BST::printInner(Vertex* root)
+void Graph::BST::printInner(Vertex* node)
 {
-	if (root != nullptr)
+	if (node != nullptr)
 	{
-		cout << root->id << endl;
-		printInner(root->BST_left);
-		printInner(root->BST_right);
+		cout << node->id << endl;
+		printInner(node->BST_left);
+		printInner(node->BST_right);
 	}
 	else return;
 

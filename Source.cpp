@@ -10,10 +10,9 @@ int main()
 
 	time_t startTime = time(NULL);
 
-	g.readGraphFromFile("text.txt");
+	g.readGraphFromFile("Graf1.txt");
 
-	g.print();
-	//g.searchTree.print();
+	
 	time_t readTime = time(NULL);
 	cout << "Read time: " << readTime - startTime << endl << endl;
 
@@ -24,8 +23,6 @@ int main()
 	cout << "Count time: " << endTime - readTime << endl;
 
 	cout << "All time: " << endTime - startTime << endl << endl;
-
-	comp->print();
 
 	return 0;
 }

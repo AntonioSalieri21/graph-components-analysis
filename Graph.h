@@ -30,16 +30,16 @@ public:
 
 	class BST{
 	public:
-		Vertex* root = nullptr;
+		Vertex* root;
 
 		void print();
-		void printInner(Vertex* root);
+		void printInner(Vertex* node);
 
 		Vertex* InsertBST(int data);
-		Vertex* InsertInnerBST(Vertex* root, int data);
+		Vertex* InsertInnerBST(Vertex** node, int data);
 
 		Vertex* searchBST(int data);
-		Vertex* searchInnerBST(Vertex* root, int data);
+		Vertex* searchInnerBST(Vertex* node, int data);
 	};
 public:
 	vector<Vertex*> vertices;
@@ -51,10 +51,7 @@ public:
 
 	void insertVertex(int id);
 	void insertVertex(Vertex* vertex);
-	void insertVertex(int id, vector<int> neighboursIds);
 
-
-	Vertex* findVertex(int id);
 	void readGraphFromFile(string path);
 
 	Component* getLargestComponent();
