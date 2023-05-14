@@ -11,7 +11,7 @@ int main()
 
 	time_t startTime = time(NULL);
 
-	g.readGraphFromFile("text.txt");
+	g.readGraphFromFile("Graf11.txt");
 
 	
 	time_t readTime = time(NULL);

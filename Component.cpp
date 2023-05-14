@@ -18,25 +18,25 @@ void Graph::Component::reset()
 
 }
 
-
-int Graph::Component::getDiameter()
+void Graph::Component::fillEccentricities()
 {
-
+#pragma omp parallel for num_threads(NUM_THREADS)
 	for (int i = 0; i < members.size(); i++)
 	{
 		Vertex* vertex = members.at(i);
 		if (vertex->eccentricity == -1)
 		{
 			vertex->eccentricity = findEccentricity(i);
-			reset();
-			/*for (auto vertex : members)
-			{
-				vertex->eccentricity = findEccentricity(vertex);
-				reset();
-			}
-			break;*/
+
+
 		}
 	}
+
+}
+
+int Graph::Component::getDiameter()
+{
+	fillEccentricities();
 
 	int max = members.at(0)->eccentricity;
 	for (auto vertex : members)
@@ -48,20 +48,10 @@ int Graph::Component::getDiameter()
 
 int Graph::Component::getRadius()
 {
-	for (int i = 0; i < members.size(); i++)
-	{
-		Vertex* vertex = members.at(i);
-		if (vertex->eccentricity == -1)
-		{
-			vertex->eccentricity = findEccentricity(i);
-			reset();
 
-		}
-	}
+	fillEccentricities();
 
 	int min = members.at(0)->eccentricity;
-
-
 
 	for (auto vertex : members)
 	{
@@ -84,7 +74,7 @@ int Graph::Component::findPathBFS(int startId)
 	queue<Vertex*> q;
 	Vertex* start = members.at(startId);
 	q.push(start);
-	start->color = 1;
+	
 	Vertex* current = start;
 
 
@@ -94,60 +84,18 @@ int Graph::Component::findPathBFS(int startId)
 		q.pop();
 		for (auto neighbour : current->neighbours)
 		{
-			if (neighbour->color != 1)
+			const int neighbourIndex = neighbour->index;
+			if(pathDistance.at(neighbourIndex) == -1)
 			{
-				pathDistance.at(neighbour->index) = pathDistance.at(current->index) + 1;
-				neighbour->color = 1;
+				pathDistance.at(neighbourIndex) = pathDistance.at(current->index) + 1;
 				q.push(neighbour);
 			}
 		}
 
-		//Parallel execution
-
-		/*#pragma omp parallel num_threads(NUM_THREADS)
-{
-
-  int thread_num = omp_get_thread_num();
-  int threads = omp_get_num_threads();
-
-  for (int i = thread_num; i < current->neighbours.size(); i += threads)
-  {
-	Vertex* neighbour = current->neighbours.at(i);
-
-
-	if (neighbour->color != 1)
-	{
-	  pathDistance.at(neighbour->index) = pathDistance.at(current->index) + 1;
-	  neighbour->color = 1;
-
-	  #pragma omp critical
-	  {
-		q.push(neighbour);
-	  }
 	}
-  }*/
-
-	}
-
-	//Parallel max distance calculation
-	//
-	//int max = pathDistance.at(current->index);
-/*#pragma omp parallel
-	{
-		int thread_num = omp_get_thread_num();
-		int threads = omp_get_num_threads();
-
-		int i_max = max;
-
-		for (int i = thread_num; i < members.size(); i += threads)
-			if (pathDistance.at(i) > max) max = pathDistance.at(i);
-
-		max = i_max;
-	}
-
-	return max;*/
-
-	return pathDistance.at(current->index);
+	if(current->eccentricity < pathDistance.at(current->index)) current->eccentricity = pathDistance.at(current->index);
+	//current->eccentricity = pathDistance.at(current->index);
+	return pathDistance.at(current->index);	
 
 }
 

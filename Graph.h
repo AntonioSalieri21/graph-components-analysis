@@ -8,7 +8,7 @@
 #include <queue>
 #include <ctime>
 
-#define NUM_THREADS 2
+#define NUM_THREADS 4
 
 using namespace std;
 class Graph 
@@ -43,6 +43,7 @@ public:
 
 	private:
 		int findEccentricity(int startId);
+		void fillEccentricities();
 		void reset();
 		int findPathBFS(int startId);
 	};
