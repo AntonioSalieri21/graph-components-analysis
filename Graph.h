@@ -14,6 +14,8 @@ public:
 		int id;	
 		vector<Vertex*> neighbours;
 		int color;
+		int eccentricity = -1;
+		int index = -1;
 
 		Vertex* BST_left;
 		Vertex* BST_right;
@@ -26,6 +28,17 @@ public:
 	public:
 		vector<Vertex*> members;
 		void print();
+
+		int getDiameter();
+		int getRadius();
+		int findEccentricity(int startId);
+		void reset();
+		void printEccentricities();
+		//vector<int> findPathBFS(int startId);
+		int findPathBFS(int startId);
+		int getIndex(Vertex* vertex);
+
+
 	};
 
 	class BST{

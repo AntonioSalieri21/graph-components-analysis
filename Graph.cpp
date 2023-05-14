@@ -3,6 +3,7 @@
 #include <stack>
 #include <iostream>
 #include <fstream>
+#include <queue>
 using namespace std;
 
 void Graph::insertVertex(int id)
@@ -13,6 +14,7 @@ void Graph::insertVertex(Vertex* vertex)
 { 
 
 	this->vertices.push_back(vertex);
+	vertex->index = vertices.size() - 1;
 }
 
 void getDoubleInt(string text, int& a, int& b)
@@ -91,6 +93,11 @@ Graph::Component* Graph::getLargestComponent()
 
 	for(auto component : components)
 		if (component.members.size() > res->members.size()) { res = &component; }
+
+	for (int i = 0; i < res->members.size(); i++)
+	{
+		res->members.at(i)->index = i;
+	}
 
 	return res;
 }
@@ -218,4 +225,118 @@ void Graph::BST::printInner(Vertex* node)
 	}
 	else return;
 
+}
+
+int Graph::Component::getDiameter()
+{
+
+	for (int i = 0; i < members.size(); i++)
+	{
+		Vertex* vertex = members.at(i);
+		if (vertex->eccentricity == -1)
+		{
+			vertex->eccentricity = findEccentricity(i);
+			reset();
+			/*for (auto vertex : members)
+			{
+				vertex->eccentricity = findEccentricity(vertex);
+				reset();
+			}
+			break;*/
+		}
+	}
+
+	int max = members.at(0)->eccentricity;
+	for (auto vertex : members)
+	{
+		if (vertex->eccentricity > max) max = vertex->eccentricity;
+	}
+	return max;
+}
+
+int Graph::Component::getRadius()
+{
+	for (int i = 0; i < members.size(); i++)
+	{
+		Vertex* vertex = members.at(i);
+		if (vertex->eccentricity == -1)
+		{
+			vertex->eccentricity = findEccentricity(i);
+			reset();
+			/*for (auto vertex : members)
+			{
+				vertex->eccentricity = findEccentricity(vertex);
+				reset();
+			}
+			break;*/
+		}
+	}
+
+	int min = members.at(0)->eccentricity;
+	for (auto vertex : members)
+	{
+		if (min > vertex->eccentricity) min = vertex->eccentricity;
+	}
+	return min;
+
+}
+
+int Graph::Component::findEccentricity(int startId)
+{
+	/*vector<int> path = findPathBFS(startId);
+
+	int max = path.at(0);
+	for (auto ecc : path)
+	{
+		if (ecc > max) max = ecc;
+	}
+	return max;*/
+	return findPathBFS(startId);
+
+}
+int Graph::Component::findPathBFS(int startId)
+{
+
+	vector<int> pathDistance;//(members.size() + 1, -1);
+	pathDistance.assign(members.size() + 1, -1);
+	pathDistance.at(startId) = 0;
+	queue<Vertex*> q;
+	Vertex* start = members.at(startId);
+	q.push(start);
+	start->color = 1; // устанавливаем цвет стартовой вершины в 1
+	Vertex* current = start;
+	while (!q.empty())
+	{
+		current = q.front();
+		q.pop();
+
+		//cout << current->id << endl;
+
+		for (auto neighbour : current->neighbours)
+			if (neighbour->color != 1) // если соседняя вершина еще не была посещена
+			{
+				pathDistance.at(neighbour->index) = pathDistance.at(current->index) + 1;
+				neighbour->color = 1; // устанавливаем цвет соседней вершины в 1
+				q.push(neighbour);
+			}
+	}
+	return pathDistance.at(current->index);
+
+}
+
+
+void Graph::Component::reset()
+{
+	for (auto vertex : members)
+	{
+		vertex->color = 0;
+	}
+}
+
+
+
+void Graph::Component::printEccentricities()
+{
+	for (auto vertex : members)
+		cout << vertex->id << "   " <<  vertex->eccentricity << endl;
 }
