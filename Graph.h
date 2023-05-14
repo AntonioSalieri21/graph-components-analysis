@@ -1,6 +1,15 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <omp.h>
+#include <stack>
+#include <iostream>
+#include <fstream>
+#include <queue>
+#include <ctime>
+
+#define NUM_THREADS 2
+
 using namespace std;
 class Graph 
 {
@@ -28,17 +37,14 @@ public:
 	public:
 		vector<Vertex*> members;
 		void print();
-
 		int getDiameter();
 		int getRadius();
+		void printEccentricities();
+
+	private:
 		int findEccentricity(int startId);
 		void reset();
-		void printEccentricities();
-		//vector<int> findPathBFS(int startId);
 		int findPathBFS(int startId);
-		int getIndex(Vertex* vertex);
-
-
 	};
 
 	class BST{
@@ -49,9 +55,10 @@ public:
 		void printInner(Vertex* node);
 
 		Vertex* InsertBST(int data);
-		Vertex* InsertInnerBST(Vertex** node, int data);
-
 		Vertex* searchBST(int data);
+		
+	private:
+		Vertex* InsertInnerBST(Vertex** node, int data);
 		Vertex* searchInnerBST(Vertex* node, int data);
 	};
 public:
@@ -68,6 +75,9 @@ public:
 	void readGraphFromFile(string path);
 
 	Component* getLargestComponent();
+
+
+private:
 	Component defineComponent(Vertex* startVertex);
 
 };

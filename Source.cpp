@@ -1,27 +1,23 @@
-#include <iostream>
 #include "Graph.h"
-#include <ctime>
+
 using namespace std;
 
 
 int main()
 {
+
+	omp_set_num_threads(NUM_THREADS);
 	Graph g;
 
 	time_t startTime = time(NULL);
 
-	g.readGraphFromFile("Graf11.txt");
+	g.readGraphFromFile("text.txt");
 
 	
 	time_t readTime = time(NULL);
 	cout << "Read time: " << readTime - startTime << endl << endl;
 
 	Graph::Component* comp = g.getLargestComponent();
-
-	for (int i = 0; i < g.components.size(); i++)
-	{
-		cout << g.components.at(i).members.size() << endl;
-	}
 
 	time_t endTime = time(NULL);
 	
