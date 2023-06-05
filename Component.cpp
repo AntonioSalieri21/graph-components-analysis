@@ -26,6 +26,7 @@ void Graph::Component::fillEccentricities()
 		Vertex* vertex = members.at(i);
 		if (vertex->eccentricity == -1)
 		{
+
 			vertex->eccentricity = findEccentricity(i);
 
 
@@ -36,8 +37,8 @@ void Graph::Component::fillEccentricities()
 
 int Graph::Component::getDiameter()
 {
-	fillEccentricities();
-
+	//fillEccentricities();
+	CUDAFillEccentricities();
 	int max = members.at(0)->eccentricity;
 	for (auto vertex : members)
 	{
@@ -82,7 +83,10 @@ int Graph::Component::findPathBFS(int startId)
 	{
 		current = q.front();
 		q.pop();
-		for (auto neighbour : current->neighbours)
+
+		int size = current->neighbours.size();
+
+		for (auto& neighbour : current->neighbours)
 		{
 			const int neighbourIndex = neighbour->index;
 			if(pathDistance.at(neighbourIndex) == -1)
@@ -93,8 +97,6 @@ int Graph::Component::findPathBFS(int startId)
 		}
 
 	}
-	if(current->eccentricity < pathDistance.at(current->index)) current->eccentricity = pathDistance.at(current->index);
-	//current->eccentricity = pathDistance.at(current->index);
 	return pathDistance.at(current->index);	
 
 }
@@ -112,3 +114,4 @@ void Graph::Component::print()
 		cout << endl;
 	}
 }
+

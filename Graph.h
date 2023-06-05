@@ -7,6 +7,8 @@
 #include <fstream>
 #include <queue>
 #include <ctime>
+#include <unordered_map>
+#include <cuda.h>
 
 #define NUM_THREADS 4
 
@@ -31,6 +33,11 @@ public:
 
 		Vertex(int id){this->id = id;}
 
+		void print()
+		{
+			for (auto neighbour : neighbours) cout << neighbour->index << endl;
+		}
+
 	};
 
 	class Component {
@@ -43,7 +50,9 @@ public:
 
 	private:
 		int findEccentricity(int startId);
+		int CUDAFindEccentricity(int startId);
 		void fillEccentricities();
+		void CUDAFillEccentricities();
 		void reset();
 		int findPathBFS(int startId);
 	};
