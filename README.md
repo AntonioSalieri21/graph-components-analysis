@@ -1,5 +1,5 @@
 # Algorithms_Project
-My project on Algotihms
+Project written for Algorithms 2 in college.
 
 Zadání
 1 Průměr a poloměr grafu
@@ -23,3 +23,19 @@ předpokládat, že jsou nějak systematicky uspořádány.
 • Vámi implementovanou aplikaci otestujte nejen na malém ukázkovém grafu z obrázku 1, ale i na
 všech ostatních testovacích grafech.
 • Výsledek vypište na standardní výstup.
+
+Assignment
+1. Graph Diameter and Radius
+Problem
+You are given an undirected graph 𝐺. Each vertex in the graph 𝐺 is labeled with a non-negative integer. Your task in this assignment is:
+1. Design a suitable representation of the graph 𝐺 in memory and be able to load the graph 𝐺 from a text file in the above-mentioned format into this representation.
+2. Find the largest component 𝐾 in the graph 𝐺. The definition of a component can be found, for example, in [1], chapter 2.2.
+3. Calculate the diameter and radius of component 𝐾. The definition of graph diameter and radius can be found, for example, in [1], chapter 2.3.
+Example
+The sample graph 𝐺 in Figure 1 consists of two components. The first component contains four vertices {0, … , 3}, and the second component contains six vertices {4, … , 9}, which is the sought-after largest component 𝐾. First, according to [1], we calculate the eccentricities of individual vertices of component 𝐾. The results are shown in Table 1. Therefore, 𝑑𝑖𝑎𝑚(𝐾) = 3, and 𝑟𝑎𝑑(𝐾) = 2.
+Implementation
+• The graph 𝐺 is stored in a text file, where on each line, a pair of non-negative integers 𝑖 and 𝑗 separated by a single space is stored. The numbers 𝑖 and 𝑗 represent vertices of the graph connected by an edge. The storage of the sample graph 𝐺 in a text file is again visible in Figure 1.
+• It is necessary to consider that edges may be stored in the text file completely randomly, and it cannot be assumed that they are systematically ordered.
+• Furthermore, the graph 𝐺 can be quite extensive, i.e., hundreds of thousands of vertices and millions of edges.
+• Test your implemented application not only on a small sample graph from Figure 1 but also on all other test graphs.
+• Print the result to standard output.
